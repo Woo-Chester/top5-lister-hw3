@@ -46,7 +46,7 @@ function Top5Item(props) {
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
-        console.log(store.currentList);
+        setText(props.text);
     }
 
     function toggleEdit() {
@@ -89,7 +89,7 @@ function Top5Item(props) {
         >
             <input
                 type="button"
-                id={"edit-item-" + index + 1}
+                id={"edit-item-" + (index + 1)}
                 className="list-card-button"
                 value={"\u270E"}
                 onClick={handleToggleEdit}
@@ -99,6 +99,7 @@ function Top5Item(props) {
     if(editActive){
         item_element = 
         <input
+            autoFocus
             id={"item-" + (index + 1)}
             className='item-card'
             type='text'

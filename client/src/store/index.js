@@ -107,6 +107,7 @@ export const useGlobalStore = () => {
                     listMarkedForDeletion: null
                 });
             }
+            // START EDITING AN ITEM NAME
             case GlobalStoreActionType.SET_ITEM_NAME_EDIT_ACTIVE: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
@@ -115,7 +116,7 @@ export const useGlobalStore = () => {
                     isListNameEditActive: false,
                     isItemEditActive: true,
                     listMarkedForDeletion: null
-                })
+                });
             }
             default:
                 return store;
@@ -277,6 +278,13 @@ export const useGlobalStore = () => {
     }
     store.redo = function () {
         tps.doTransaction();
+    }
+
+    store.setIsItemNameEditActive = function() {
+        storeReducer({
+            type: GlobalStoreActionType.SET_ITEM_NAME_EDIT_ACTIVE,
+            payload: store.currentList
+        })
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME

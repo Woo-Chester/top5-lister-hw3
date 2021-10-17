@@ -91,6 +91,7 @@ function ListCard(props) {
     if (editActive) {
         cardElement =
             <input
+                autoFocus
                 id={"list-" + idNamePair._id}
                 className='list-card'
                 type='text'
