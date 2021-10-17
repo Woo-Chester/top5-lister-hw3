@@ -9,6 +9,7 @@ import { GlobalStoreContext } from '../store'
 function Top5Item(props) {
     const { store } = useContext(GlobalStoreContext);
     const [draggedTo, setDraggedTo] = useState(0);
+    const [editActive, setEditActive] = useState(false);
 
     function handleDragStart(event) {
         event.dataTransfer.setData("item", event.target.id);
@@ -41,6 +42,19 @@ function Top5Item(props) {
         store.addMoveItemTransaction(sourceId, targetId);
     }
 
+    function handleToggleEdit(event) {
+        event.stopPropagation();
+        toggleEdit();
+    }
+
+    function toggleEdit() {
+        let newActive = !editActive;
+        if (newActive) {
+            store.setIsListNameEditActive();
+        }
+        setEditActive(newActive);
+    }
+
     let { index } = props;
     let itemClass = "top5-item";
     if (draggedTo) {
@@ -62,6 +76,7 @@ function Top5Item(props) {
                 id={"edit-item-" + index + 1}
                 className="list-card-button"
                 value={"\u270E"}
+                onClick={handleToggleEdit}
             />
             {props.text}
         </div>)

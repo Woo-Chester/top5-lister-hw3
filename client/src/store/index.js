@@ -41,6 +41,17 @@ export const useGlobalStore = () => {
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
+            // CREATE NEW LIST
+            case GlobalStoreActionType.CREATE_NEW_LIST: {
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter++,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
             // LIST UPDATE OF ITS NAME
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
@@ -95,6 +106,16 @@ export const useGlobalStore = () => {
                     isItemEditActive: false,
                     listMarkedForDeletion: null
                 });
+            }
+            case GlobalStoreActionType.SET_ITEM_NAME_EDIT_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: true,
+                    listMarkedForDeletion: null
+                })
             }
             default:
                 return store;
@@ -167,13 +188,22 @@ export const useGlobalStore = () => {
     store.createNewList = function(){
         async function asyncCreateNewList(){
             let new_list = {
-                            "name": "Untitled List",
+                            "name": ("Untitled List " + store.newListCounter),
                             "items": ["?","?","?","?","?"]
                             };
-            const response = await api.createTop5List(new_list);
+            let response = await api.createTop5List(new_list);
             if(response.data.success){
                 new_list = response.data.top5List;
                 let new_id = new_list._id;
+
+                response = await api.getTop5ListPairs();
+                if(response.data.success){
+                    let pairsArray = response.data.idNamePairs;
+                    storeReducer({
+                        type: GlobalStoreActionType.CREATE_NEW_LIST,
+                        payload: pairsArray
+                    });
+                }
                 store.setCurrentList(new_id);
             }
             else{
