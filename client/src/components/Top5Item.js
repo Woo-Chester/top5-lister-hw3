@@ -10,6 +10,7 @@ function Top5Item(props) {
     const { store } = useContext(GlobalStoreContext);
     const [draggedTo, setDraggedTo] = useState(0);
     const [editActive, setEditActive] = useState(false);
+    const [ text, setText ] = useState("");
 
     function handleDragStart(event) {
         event.dataTransfer.setData("item", event.target.id);
@@ -45,14 +46,28 @@ function Top5Item(props) {
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
+        console.log(store.currentList);
     }
 
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            store.setIsListNameEditActive();
+            //store.setIsItemNameEditActive();
         }
         setEditActive(newActive);
+    }
+
+    function handleKeyPress(event) {
+        if (event.code === "Enter") {
+            let index = event.target.id.substring("item-".length);
+            store.currentList.items[index - 1] = text;
+            store.updateCurrentList();
+            toggleEdit();
+        }
+    }
+
+    function handleUpdateText(event) {
+        setText(event.target.value );
     }
 
     let { index } = props;
@@ -60,7 +75,8 @@ function Top5Item(props) {
     if (draggedTo) {
         itemClass = "top5-item-dragged-to";
     }
-    return (
+
+    let item_element = 
         <div
             id={'item-' + (index + 1)}
             className={itemClass}
@@ -79,7 +95,21 @@ function Top5Item(props) {
                 onClick={handleToggleEdit}
             />
             {props.text}
-        </div>)
+        </div>;
+    if(editActive){
+        item_element = 
+        <input
+            id={"item-" + (index + 1)}
+            className='item-card'
+            type='text'
+            onKeyPress={handleKeyPress}
+            onChange={handleUpdateText}
+            defaultValue={props.text}
+        />;
+    }
+    return (
+        item_element
+    );
 }
 
 export default Top5Item;
