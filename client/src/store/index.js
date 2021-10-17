@@ -18,7 +18,8 @@ export const GlobalStoreActionType = {
     CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
+    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    DELETE_LIST: "DELETE_LIST"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -96,6 +97,17 @@ export const useGlobalStore = () => {
                     isItemEditActive: false,
                     listMarkedForDeletion: null
                 });
+            }
+            // DELETE A LIST
+            case GlobalStoreActionType.DELETE_LIST: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: payload
+                })
             }
             // START EDITING A LIST NAME
             case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
@@ -302,6 +314,33 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.setDeleteList = function(id){
+        storeReducer({
+            type: GlobalStoreActionType.DELETE_LIST,
+            payload: id
+        })
+    }
+    store.hideDeleteListModal = function(){
+        let modal = document.getElementById("delete-modal");
+        modal.classList.remove("is-visible");
+    }
+    store.showDeleteListModal = function(){
+        let modal = document.getElementById("delete-modal");
+        modal.classList.add("is-visible");
+    }
+    store.deleteMarkedList = function(){
+        async function asyncDeleteList() {
+            let del_id = store.listMarkedForDeletion;
+            let response = await api.deleteTop5ListById(del_id);
+            if (response.data.success) {
+                store.loadIdNamePairs();
+                store.history.push("/");
+            }
+        }
+        asyncDeleteList();
+        store.hideDeleteListModal();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
