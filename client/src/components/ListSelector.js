@@ -15,7 +15,6 @@ const ListSelector = () => {
     function handleAddList(event){
         if (!event.target.disabled) {
             store.createNewList();
-            store.loadIdNamePairs();
         }
     }
 

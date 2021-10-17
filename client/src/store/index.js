@@ -165,11 +165,22 @@ export const useGlobalStore = () => {
 
     // THE FOLLOWING FUNCTION CREATES A NEW LIST
     store.createNewList = function(){
-        let new_list = {
-                        "name": "Untitled List",
-                        "items": ["?","?","?","?","?"]
-                        };
-        api.createTop5List(new_list);
+        async function asyncCreateNewList(){
+            let new_list = {
+                            "name": "Untitled List",
+                            "items": ["?","?","?","?","?"]
+                            };
+            const response = await api.createTop5List(new_list);
+            if(response.data.success){
+                new_list = response.data.top5List;
+                let new_id = new_list._id;
+                store.setCurrentList(new_id);
+            }
+            else{
+                console.log("Could NOT create new List");
+            }
+        }
+        asyncCreateNewList();
     }
 
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
