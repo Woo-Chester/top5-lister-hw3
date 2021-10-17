@@ -336,7 +336,6 @@ export const useGlobalStore = () => {
             let response = await api.deleteTop5ListById(del_id);
             if (response.data.success) {
                 store.loadIdNamePairs();
-                store.history.push("/");
             }
         }
         asyncDeleteList();

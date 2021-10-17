@@ -88,7 +88,7 @@ deleteTop5List = async (req, res) => {
                 .status(404)
                 .json({ success: false, error: `Top 5 List not found` })
         }
-
+        console.log(top5List);
         return res.status(200).json({ success: true, data: top5List })
     }).catch(err => console.log(err))
 }
