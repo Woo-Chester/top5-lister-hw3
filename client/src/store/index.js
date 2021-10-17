@@ -163,6 +163,15 @@ export const useGlobalStore = () => {
         asyncLoadIdNamePairs();
     }
 
+    // THE FOLLOWING FUNCTION CREATES A NEW LIST
+    store.createNewList = function(){
+        let new_list = {
+                        "name": "Untitled List",
+                        "items": ["?","?","?","?","?"]
+                        };
+        api.createTop5List(new_list);
+    }
+
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
     // OF A LIST, WHICH INCLUDES DEALING WITH THE TRANSACTION STACK. THE
     // FUNCTIONS ARE setCurrentList, addMoveItemTransaction, addUpdateItemTransaction,
