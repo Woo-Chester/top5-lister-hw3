@@ -11,6 +11,7 @@ function Top5Item(props) {
     const [draggedTo, setDraggedTo] = useState(0);
     const [editActive, setEditActive] = useState(false);
     const [ text, setText ] = useState("");
+    const [ originalText, setOriginalText ] = useState("");
 
     function handleDragStart(event) {
         event.dataTransfer.setData("item", event.target.id);
@@ -47,6 +48,7 @@ function Top5Item(props) {
         event.stopPropagation();
         toggleEdit();
         setText(props.text);
+        setOriginalText(props.text);
     }
 
     function toggleEdit() {
@@ -61,8 +63,8 @@ function Top5Item(props) {
         if (event.code === "Enter") {
             let index = event.target.id.substring("item-".length);
             store.currentList.items[index - 1] = text;
-            store.updateCurrentList();
             toggleEdit();
+            store.addChangeItemTransaction(index - 1,originalText,text);
         }
     }
 
