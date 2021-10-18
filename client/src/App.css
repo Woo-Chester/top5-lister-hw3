@@ -129,6 +129,11 @@ body {
   float:left;
 }
 
+input:disabled{
+  opacity: 25%;
+  cursor: not-allowed;
+}
+
 #list-selector-list {
   position:absolute;
   left:0%;

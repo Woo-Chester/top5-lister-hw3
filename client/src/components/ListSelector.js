@@ -32,10 +32,14 @@ const ListSelector = () => {
             />
         ))
     }
+
+    let disable_add = store.isListNameEditActive;
+
     return (
         <div id="top5-list-selector">
             <div id="list-selector-heading">
                 <input
+                    disabled={disable_add}
                     type="button"
                     id="add-list-button"
                     className="top5-button"

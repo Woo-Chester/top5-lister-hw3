@@ -54,17 +54,23 @@ function Top5Item(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            //store.setIsItemNameEditActive();
+            store.setIsItemNameEditActive();
         }
         setEditActive(newActive);
     }
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
+            if(text==originalText){
+                toggleEdit();
+                store.updateCurrentList();
+                return;
+            }
             let index = event.target.id.substring("item-".length);
             store.currentList.items[index - 1] = text;
             toggleEdit();
             store.addChangeItemTransaction(index - 1,originalText,text);
+
         }
     }
 
@@ -90,6 +96,7 @@ function Top5Item(props) {
             draggable="true"
         >
             <input
+                disabled={store.isItemEditActive}
                 type="button"
                 id={"edit-item-" + (index + 1)}
                 className="list-card-button"
