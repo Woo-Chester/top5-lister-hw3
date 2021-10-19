@@ -103,11 +103,11 @@ export const useGlobalStore = () => {
             case GlobalStoreActionType.DELETE_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: null,
+                    currentList: payload,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: payload
+                    listMarkedForDeletion: payload._id
                 })
             }
             // START EDITING A LIST NAME
@@ -212,15 +212,16 @@ export const useGlobalStore = () => {
                 new_list = response.data.top5List;
                 let new_id = new_list._id;
 
-                // response = await api.getTop5ListPairs();
-                // if(response.data.success){
-                //     let pairsArray = response.data.idNamePairs;
-                //     // storeReducer({
-                //     //     type: GlobalStoreActionType.CREATE_NEW_LIST,
-                //     //     payload: pairsArray
-                //     // });
-                // }
+                response = await api.getTop5ListPairs();
+                if(response.data.success){
+                    let pairsArray = response.data.idNamePairs;
+                    storeReducer({
+                        type: GlobalStoreActionType.CREATE_NEW_LIST,
+                        payload: pairsArray
+                    });
+                }
                 store.setCurrentList(new_id);
+                console.log(store.newListCounter);
             }
             else{
                 console.log("Could NOT create new List");
@@ -319,14 +320,27 @@ export const useGlobalStore = () => {
     }
 
     store.setDeleteList = function(id){
-        storeReducer({
-            type: GlobalStoreActionType.DELETE_LIST,
-            payload: id
-        })
+        async function asyncSetDeleteList(del_id){
+            let response = await api.getTop5ListById(id);
+            if(response.data.success){
+                let list_to_delete = response.data.top5List;
+                storeReducer({
+                    type: GlobalStoreActionType.DELETE_LIST,
+                    payload: list_to_delete
+                })
+            }
+        }
+        asyncSetDeleteList(id);
+
+        // storeReducer({
+        //     type: GlobalStoreActionType.DELETE_LIST,
+        //     payload: id
+        // })
     }
     store.hideDeleteListModal = function(){
         let modal = document.getElementById("delete-modal");
         modal.classList.remove("is-visible");
+        store.loadIdNamePairs();
     }
     store.showDeleteListModal = function(){
         let modal = document.getElementById("delete-modal");

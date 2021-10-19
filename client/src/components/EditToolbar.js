@@ -23,12 +23,12 @@ function EditToolbar() {
         store.closeCurrentList();
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.isListNameEditActive || store.isItemNameEditActive) {
         editStatus = true;
     }
     let undo_class = enabledButtonClass + (editStatus || !store.hasUndoTransaction() ? "-disabled" : "");
     let redo_class = enabledButtonClass + (editStatus || !store.hasRedoTransaction() ? "-disabled" : "");
-    let close_class = enabledButtonClass + ((!editStatus && store.currentList!=null) ? "" : "-disabled");
+    let close_class = enabledButtonClass + ((!editStatus && store.currentList!=null && store.listMarkedForDeletion==null) ? "" : "-disabled");
 
     return (
         <div id="edit-toolbar">

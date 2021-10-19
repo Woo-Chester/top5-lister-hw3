@@ -33,7 +33,7 @@ const ListSelector = () => {
         ))
     }
 
-    let disable_add = store.isListNameEditActive;
+    let disable_add = store.isListNameEditActive || store.listMarkedForDeletion;
 
     return (
         <div id="top5-list-selector">
