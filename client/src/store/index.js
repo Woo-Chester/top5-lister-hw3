@@ -212,14 +212,14 @@ export const useGlobalStore = () => {
                 new_list = response.data.top5List;
                 let new_id = new_list._id;
 
-                response = await api.getTop5ListPairs();
-                if(response.data.success){
-                    let pairsArray = response.data.idNamePairs;
-                    storeReducer({
-                        type: GlobalStoreActionType.CREATE_NEW_LIST,
-                        payload: pairsArray
-                    });
-                }
+                // response = await api.getTop5ListPairs();
+                // if(response.data.success){
+                //     let pairsArray = response.data.idNamePairs;
+                //     // storeReducer({
+                //     //     type: GlobalStoreActionType.CREATE_NEW_LIST,
+                //     //     payload: pairsArray
+                //     // });
+                // }
                 store.setCurrentList(new_id);
             }
             else{
